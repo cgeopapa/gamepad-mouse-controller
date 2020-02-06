@@ -36,6 +36,7 @@ namespace gamepad_mouse_controller
         public static extern void keybd_event(uint bVk, uint bScan, uint dwFlags, uint dwExtraInfo);
         private const int VK_BROWSER_BACK = 0xA6;
         private const int VK_BROWSER_FORWARD = 0xA7;
+        private const int VK_LWIN = 0x5B;
 
         #endregion
 
@@ -132,11 +133,19 @@ namespace gamepad_mouse_controller
             if(buttons[4])
             {
                 keybd_event(VK_BROWSER_BACK, 0, 0, 0);
+                keybd_event(VK_BROWSER_BACK, 0, 0x0002, 0);
             }
             
             if(buttons[5])
             {
                 keybd_event(VK_BROWSER_FORWARD, 0, 0, 0);
+                keybd_event(VK_BROWSER_FORWARD, 0, 0x0002, 0);
+            }
+
+            if(buttons[7])
+            {
+                keybd_event(VK_LWIN, 0, 0, 0);
+                keybd_event(VK_LWIN, 0, 0x0002, 0);
             }
         }
     }
