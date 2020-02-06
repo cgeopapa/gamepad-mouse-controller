@@ -32,6 +32,11 @@ namespace gamepad_mouse_controller
         private const int MOUSEEVENT_RIGHTUP = 0x10;
         private const int MOUSEEVENTF_WHEEL = 0x0800;
 
+        [DllImport("user32.dll")]
+        public static extern void keybd_event(uint bVk, uint bScan, uint dwFlags, uint dwExtraInfo);
+        private const int VK_BROWSER_BACK = 0xA6;
+        private const int VK_BROWSER_FORWARD = 0xA7;
+
         #endregion
 
         //Background Worker stuff
@@ -122,6 +127,16 @@ namespace gamepad_mouse_controller
             else if (w == 0)
             {
                 scrollSpeed = 1;
+            }
+
+            if(buttons[4])
+            {
+                keybd_event(VK_BROWSER_BACK, 0, 0, 0);
+            }
+            
+            if(buttons[5])
+            {
+                keybd_event(VK_BROWSER_FORWARD, 0, 0, 0);
             }
         }
     }
