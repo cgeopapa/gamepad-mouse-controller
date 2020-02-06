@@ -42,7 +42,7 @@ namespace gamepad_mouse_controller
 
         //Background Worker stuff
         private readonly BackgroundWorker worker;
-        private Timer timer= new Timer();
+        private Timer timer = new Timer();
 
         //Joystick stuff
         public Joystick joystick;
@@ -51,11 +51,13 @@ namespace gamepad_mouse_controller
         private bool leftDown = false;
         private bool rightDown = false;
         private int scrollSpeed = 1;
+        private bool[] previousButtonState;
 
 
         public MouseControl(Joystick joystick)
         {
             this.joystick = joystick;
+            previousButtonState = this.joystick.GetCurrentState().GetButtons();
 
             worker = new BackgroundWorker();
             worker.DoWork += worker_DoWork;
@@ -87,40 +89,29 @@ namespace gamepad_mouse_controller
             GetCursorPos(ref mousePos);
             SetCursorPos(mousePos.X + x, mousePos.Y + y);
 
-            if (buttons[0])
+            //X pressed
+            if (buttons[0] && !previousButtonState[0])
             {
-                if (!leftDown)
-                {
-                    leftDown = true;
-                    mouse_event(MOUSEEVENT_LEFTDOWN, 0, 0, 0, 0);
-                }
+                mouse_event(MOUSEEVENT_LEFTDOWN, 0, 0, 0, 0);
             }
-            else
+            //X released
+            else if (!buttons[0] && previousButtonState[0])
             {
-                if (leftDown)
-                {
-                    leftDown = false;
-                    mouse_event(MOUSEEVENT_LEFTUP, 0, 0, 0, 0);
-                }
+                mouse_event(MOUSEEVENT_LEFTUP, 0, 0, 0, 0);
             }
 
-            if (buttons[1])
+            //O pressed
+            if (buttons[1] && !previousButtonState[1])
             {
-                if (!rightDown)
-                {
-                    rightDown = true;
-                    mouse_event(MOUSEEVENT_RIGHTDOWN, 0, 0, 0, 0);
-                }
+                mouse_event(MOUSEEVENT_RIGHTDOWN, 0, 0, 0, 0);
             }
-            else
+            //O released
+            else if (!buttons[1] && previousButtonState[1])
             {
-                if (rightDown)
-                {
-                    rightDown = false;
-                    mouse_event(MOUSEEVENT_RIGHTUP, 0, 0, 0, 0);
-                }
+                mouse_event(MOUSEEVENT_RIGHTUP, 0, 0, 0, 0);
             }
 
+            //L3 pressed
             if(buttons[9])
             {
                 scrollSpeed = 3;
@@ -130,23 +121,39 @@ namespace gamepad_mouse_controller
                 scrollSpeed = 1;
             }
 
-            if(buttons[4])
+            //R1 pressed
+            if(buttons[4] && !previousButtonState[4])
             {
                 keybd_event(VK_BROWSER_BACK, 0, 0, 0);
+            }
+            //R1 released
+            else if(!buttons[4] && previousButtonState[4])
+            {
                 keybd_event(VK_BROWSER_BACK, 0, 0x0002, 0);
             }
             
-            if(buttons[5])
+            //L1 pressed
+            if(buttons[5] && !previousButtonState[5])
             {
                 keybd_event(VK_BROWSER_FORWARD, 0, 0, 0);
+            }
+            //L1 released
+            else if(!buttons[5] && previousButtonState[5])
+            {
                 keybd_event(VK_BROWSER_FORWARD, 0, 0x0002, 0);
             }
 
-            if(buttons[7])
+            //Start pressed
+            if(buttons[7] && !previousButtonState[7])
             {
                 keybd_event(VK_LWIN, 0, 0, 0);
+            }
+            else if(!buttons[7] && previousButtonState[7])
+            {
                 keybd_event(VK_LWIN, 0, 0x0002, 0);
             }
+
+            previousButtonState = buttons;
         }
     }
 }
