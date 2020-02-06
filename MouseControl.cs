@@ -9,6 +9,7 @@ namespace gamepad_mouse_controller
 {
     class MouseControl
     {
+        #region Dlls
         [DllImport("User32.dll")]
         private static extern bool SetCursorPos(int X, int Y);
 
@@ -31,16 +32,20 @@ namespace gamepad_mouse_controller
         private const int MOUSEEVENT_RIGHTUP = 0x10;
         private const int MOUSEEVENTF_WHEEL = 0x0800;
 
+        #endregion
 
+        //Background Worker stuff
         private readonly BackgroundWorker worker;
         private Timer timer= new Timer();
 
-        private DirectInput input = new DirectInput();
-        private Joystick[] joysticks;
+        //Joystick stuff
         public Joystick joystick;
 
+        //Variables
         private bool leftDown = false;
         private bool rightDown = false;
+        private int scrollSpeed = 1;
+
 
         public MouseControl(Joystick joystick)
         {
@@ -67,7 +72,7 @@ namespace gamepad_mouse_controller
             int y = state.Y * state.Y * state.Y / 100;
             int x = state.X * state.X * state.X / 100;
 
-            int w = -state.RotationY;
+            int w = -state.RotationY * scrollSpeed;
             mouse_event(MOUSEEVENTF_WHEEL, 0, 0, w, 0);
 
             bool[] buttons = state.GetButtons();
@@ -109,32 +114,15 @@ namespace gamepad_mouse_controller
                     mouse_event(MOUSEEVENT_RIGHTUP, 0, 0, 0, 0);
                 }
             }
-        }
 
-        private Joystick[] GetJoysticks()
-        {
-            List<Joystick> sticks = new List<Joystick>();
-            foreach (DeviceInstance device in input.GetDevices(DeviceClass.GameController, DeviceEnumerationFlags.AttachedOnly))
+            if(buttons[9])
             {
-                try
-                {
-                    var stick = new Joystick(input, device.InstanceGuid);
-                    stick.Acquire();
-                    foreach (DeviceObjectInstance deviceObject in stick.GetObjects())
-                    {
-                        if ((deviceObject.ObjectType & ObjectDeviceType.Axis) != 0)
-                        {
-                            stick.GetObjectPropertiesById((int)deviceObject.ObjectType).SetRange(-10, 10);
-                        }
-                    }
-                    sticks.Add(stick);
-                }
-                catch (DirectInputException)
-                {
-
-                }
+                scrollSpeed = 3;
             }
-            return sticks.ToArray();
+            else if (w == 0)
+            {
+                scrollSpeed = 1;
+            }
         }
     }
 }

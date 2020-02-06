@@ -54,6 +54,7 @@ namespace gamepad_mouse_controller
                                 if ((deviceObject.ObjectType & ObjectDeviceType.Axis) != 0)
                                 {
                                     stick.GetObjectPropertiesById((int)deviceObject.ObjectType).SetRange(-10, 10);
+                                    stick.GetObjectPropertiesById((int)deviceObject.ObjectType).DeadZone = 500;
                                 }
                             }
                             joysticks.Add(new MouseControl(stick));
