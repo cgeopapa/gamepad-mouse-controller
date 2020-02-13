@@ -48,8 +48,6 @@ namespace gamepad_mouse_controller
         public Joystick joystick;
 
         //Variables
-        private bool leftDown = false;
-        private bool rightDown = false;
         private int scrollSpeed = 1;
         private bool[] previousButtonState;
 
