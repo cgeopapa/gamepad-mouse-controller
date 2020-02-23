@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Timers;
 using System.ComponentModel;
 using SlimDX.DirectInput;
@@ -37,6 +36,10 @@ namespace gamepad_mouse_controller
         private const int VK_BROWSER_BACK = 0xA6;
         private const int VK_BROWSER_FORWARD = 0xA7;
         private const int VK_LWIN = 0x5B;
+        private const int VK_LEFT = 0x25;
+        private const int VK_UP = 0x26;
+        private const int VK_RIGHT = 0x27;
+        private const int VK_DOWN = 0x28;
 
         #endregion
 
@@ -50,12 +53,14 @@ namespace gamepad_mouse_controller
         //Variables
         private int scrollSpeed = 1;
         private bool[] previousButtonState;
+        private int[] previousArrows;
 
 
         public MouseControl(Joystick joystick)
         {
             this.joystick = joystick;
             previousButtonState = this.joystick.GetCurrentState().GetButtons();
+            previousArrows = this.joystick.GetCurrentState().GetPointOfViewControllers();
 
             worker = new BackgroundWorker();
             worker.DoWork += worker_DoWork;
@@ -79,6 +84,7 @@ namespace gamepad_mouse_controller
             int x = state.X * state.X * state.X / 100;
 
             int w = -state.RotationY * scrollSpeed;
+            int[] arrows = state.GetPointOfViewControllers();
             mouse_event(MOUSEEVENTF_WHEEL, 0, 0, w, 0);
 
             bool[] buttons = state.GetButtons();
@@ -151,6 +157,45 @@ namespace gamepad_mouse_controller
                 keybd_event(VK_LWIN, 0, 0x0002, 0);
             }
 
+            /*
+            //Up arrow pressed
+            if(arrows[0] == 18000 && previousArrows[0] != 18000)
+            {
+                keybd_event(VK_UP, 0, 0, 0);
+            }
+            else if(arrows[0] != 18000 && previousArrows[0] == 18000)
+            {
+                keybd_event(VK_UP, 0, 0x0002, 0);
+            }
+            //Down arrow pressed
+            if(arrows[0] == 27000 && previousArrows[0] != 27000)
+            {
+                keybd_event(VK_DOWN, 0, 0, 0);
+            }
+            else if(arrows[0] != 27000 && previousArrows[0] == 27000)
+            {
+                keybd_event(VK_DOWN, 0, 0x0002, 0);
+            }
+            //Left arrow pressed
+            if(arrows[0] == 0 && previousArrows[0] != 0)
+            {
+                keybd_event(VK_LEFT, 0, 0, 0);
+            }
+            else if(arrows[0] != 0 && previousArrows[0] == 0)
+            {
+                keybd_event(VK_LEFT, 0, 0x0002, 0);
+            }
+            //Right arrow pressed
+            if(arrows[0] == 9000 && previousArrows[0] != 9000)
+            {
+                keybd_event(VK_RIGHT, 0, 0, 0);
+            }
+            else if(arrows[0] != 9000 && previousArrows[0] == 9000)
+            {
+                keybd_event(VK_RIGHT, 0, 0x0002, 0);
+            }*/
+
+            previousArrows = arrows;
             previousButtonState = buttons;
         }
     }

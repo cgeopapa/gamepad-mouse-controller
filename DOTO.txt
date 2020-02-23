@@ -1,0 +1,7 @@
++ Windows Tabled mode on activate
++ Window
+    + Sensitivity
+    + Controlls
++ Arrows function as arrows
++ Arrows + X launch app
++ Quick window change
