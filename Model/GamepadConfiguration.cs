@@ -1,8 +1,10 @@
 ﻿using gamepad_mouse_controller.Controller;
+using System;
+using System.Runtime.InteropServices;
 
 namespace gamepad_mouse_controller.Model
 {
-    class Configuration : IInput
+    class GamepadConfiguration : IInput
     {
         #region Dlls
         [DllImport("User32.dll")]
@@ -176,12 +178,12 @@ namespace gamepad_mouse_controller.Model
 
         public void OnXDown()
         {
-            throw new System.NotImplementedException();
+            mouse_event(MOUSEEVENT_LEFTDOWN, 0, 0, 0, 0);
         }
 
         public void OnXUp()
         {
-            throw new System.NotImplementedException();
+            mouse_event(MOUSEEVENT_LEFTUP, 0, 0, 0, 0);
         }
 
         public void R2L2Axis(int axis)

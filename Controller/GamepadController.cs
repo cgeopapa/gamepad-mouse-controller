@@ -1,77 +1,44 @@
 ﻿using gamepad_mouse_controller.Model;
 using SlimDX.DirectInput;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Reflection;
-using System.Timers;
 
 namespace gamepad_mouse_controller.Controller
 {
     class GamepadController
     {
-        private IInput configuration;
+        public Gamepad[] gamepads;
 
-        private readonly BackgroundWorker worker;
-        private Timer timer = new Timer();
-
-        public Joystick joystick;
-
-        private bool[] previousButtonState;
-        private Action[] actions;
-
-        public GamepadController(IInput configuration, Joystick joystick)
+        public GamepadController()
         {
-            this.configuration = configuration;
-            this.joystick = joystick;
-            previousButtonState = joystick.GetCurrentState().GetButtons();
-
-            worker = new BackgroundWorker();
-            worker.DoWork += worker_DoWork;
-
-            timer.Interval = 10;
-            timer.Enabled = true;
-
-            actions = new Action[]
-            {
-                configuration.OnXDown, configuration.OnXUp,
-                configuration.OnODown, configuration.OnOUp,
-                configuration.OnSDown, configuration.OnSUp,
-                configuration.OnTDown, configuration.OnTUp,
-                configuration.OnL1Down, configuration.OnL1Up,
-                configuration.OnR1Down, configuration.OnR1Up,
-                configuration.OnSelectDown, configuration.OnSelectUp,
-                configuration.OnStartDown, configuration.OnStartUp,
-                configuration.OnL3Down, configuration.OnL3Up,
-                configuration.OnR3Down, configuration.OnR3Up,
-            };
-
-            worker.RunWorkerAsync();
+            gamepads = GetDevices();
         }
 
-        private void worker_DoWork(object sender, DoWorkEventArgs e)
+        public Gamepad[] GetDevices()
         {
-            timer.Elapsed += new ElapsedEventHandler(ManageInput);
-        }
-
-        private void ManageInput(object sender, ElapsedEventArgs e)
-        {
-            JoystickState state = joystick.GetCurrentState();
-            bool[] curButtonState = state.GetButtons();
-
-            for (int i = 0; i < actions.Length; i++)
+            DirectInput input = new DirectInput();
+            IList<DeviceInstance> deviceInstances = input.GetDevices(DeviceClass.GameController, DeviceEnumerationFlags.AttachedOnly);
+            List<Gamepad> joysticks = new List<Gamepad>();
+            foreach (DeviceInstance device in deviceInstances)
             {
-                if(curButtonState[i] && !previousButtonState[i])
+                try
                 {
-                    actions[i * 2]();
+                    var stick = new Joystick(input, device.InstanceGuid);
+                    stick.Acquire();
+
+                    foreach (DeviceObjectInstance deviceObject in stick.GetObjects())
+                    {
+                        if ((deviceObject.ObjectType & ObjectDeviceType.Axis) != 0)
+                        {
+                            stick.GetObjectPropertiesById((int)deviceObject.ObjectType).SetRange(-10, 10);
+                            stick.GetObjectPropertiesById((int)deviceObject.ObjectType).DeadZone = 500;
+                        }
+                    }
+                    joysticks.Add(new Gamepad(stick));
                 }
-                else if(!curButtonState[i] && previousButtonState[i])
-                {
-                    actions[i * 2 + 1]();
-                }
+                catch (DirectInputException)
+                {}
             }
-
-            previousButtonState = state.GetButtons();
+            return joysticks.ToArray();
         }
     }
 }
