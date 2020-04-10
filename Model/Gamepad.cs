@@ -1,44 +1,30 @@
 ﻿using SlimDX.DirectInput;
 using System;
+using gamepad_mouse_controller.Actions;
 using System.ComponentModel;
 using System.Timers;
+using System.Collections.Generic;
 
 namespace gamepad_mouse_controller.Model
 {
     class Gamepad
     {
         private GamepadConfiguration configuration;
+
         public readonly Joystick device;
         private bool[] previousButtonState;
 
         private readonly BackgroundWorker worker;
         private Timer timer = new Timer();
 
-        private Action[] actions;
-
         public Gamepad(Joystick device)
         {
             this.device = device;
             previousButtonState = device.GetCurrentState().GetButtons();
-            configuration = new GamepadConfiguration();
-
-            actions = new Action[]
-            {
-                configuration.OnXDown, configuration.OnXUp,
-                configuration.OnODown, configuration.OnOUp,
-                configuration.OnSDown, configuration.OnSUp,
-                configuration.OnTDown, configuration.OnTUp,
-                configuration.OnL1Down, configuration.OnL1Up,
-                configuration.OnR1Down, configuration.OnR1Up,
-                configuration.OnSelectDown, configuration.OnSelectUp,
-                configuration.OnStartDown, configuration.OnStartUp,
-                configuration.OnL3Down, configuration.OnL3Up,
-                configuration.OnR3Down, configuration.OnR3Up,
-            };
+            configuration = new GamepadConfiguration("gamepad01", 10);
 
             worker = new BackgroundWorker();
             timer.Elapsed += new ElapsedEventHandler(ManageInput);
-            //worker.DoWork += worker_DoWork;
 
             timer.Interval = 10;
             timer.Enabled = true;
@@ -51,16 +37,26 @@ namespace gamepad_mouse_controller.Model
             JoystickState state = device.GetCurrentState();
             bool[] curButtonState = state.GetButtons();
 
-            for (int i = 0; i < actions.Length; i++)
+            int y = state.Y;
+            int x = state.X;
+            configuration.action[10].Execute(x, y);
+
+            //int w = -state.RotationY * scrollSpeed;
+
+            for (int i = 0; i < 10; i++)
             {
-                if (curButtonState[i] && !previousButtonState[i])
+                try
                 {
-                    actions[i * 2]();
+                    if (curButtonState[i] && !previousButtonState[i])
+                    {
+                        configuration.action[i].Execute(true);
+                    }
+                    else if (!curButtonState[i] && previousButtonState[i])
+                    {
+                        configuration.action[i].Execute(false);
+                    }
                 }
-                else if (!curButtonState[i] && previousButtonState[i])
-                {
-                    actions[i * 2 + 1]();
-                }
+                catch (Exception) { }
             }
             previousButtonState = state.GetButtons();
         }

@@ -1,6 +1,7 @@
 ﻿using gamepad_mouse_controller.Controller;
-using gamepad_mouse_controller.Model;
+using gamepad_mouse_controller.Actions;
 using System.Windows;
+using System.Collections.Generic;
 
 namespace gamepad_mouse_controller
 {

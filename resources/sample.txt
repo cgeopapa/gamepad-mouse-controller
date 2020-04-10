@@ -1,0 +1,26 @@
+interface Action 
+{ 
+    public void execute(); 
+} 
+
+class SaveAction : Action 
+{
+    private String name = "save";
+    public void execute () { //υλοποίηση ενέργειας κουμπιού }
+    public String getName() { return name; }
+}
+ 
+class UndoAction : Action 
+{
+    private String name = "undo";
+    public void execute () { //υλοποίηση ενέργειας κουμπιού  } 
+    public String getName() { return name; }
+}
+ 
+HashMap<String, Action> actionsMap = new HashMap();
+
+Action action = new SaveAction();
+actionsMap.add(action.getName(), action);
+
+action = new UndoAction();
+actionsMap.add(action.getName(), action);
