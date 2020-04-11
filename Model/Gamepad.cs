@@ -39,7 +39,9 @@ namespace gamepad_mouse_controller.Model
             int x = state.X;
             configuration.action[10].Execute(x, y);
 
-            //int w = -state.RotationY * scrollSpeed;
+            y = -state.RotationY / 10;
+            x = state.RotationX / 10;
+            configuration.action[11].Execute(x, y);
 
             for (int i = 0; i < 10; i++)
             {

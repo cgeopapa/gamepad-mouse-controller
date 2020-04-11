@@ -30,12 +30,13 @@ namespace gamepad_mouse_controller.Model
                     { 4, "BrowserBackAction" },
                     { 5, "BrowserForwardAction" },
                     { 7, "WindowsKeyAction" },
-                    { length++, "MouseMoveAction" }
+                    { length++, "MouseMoveAction" },
+                    { length++, "MouseScrollAction" }
                 };
-                Save();
+                //Save();
             }
 
-            action = new IAction[11];
+            action = new IAction[12];
             for(int i = 0; i < action.Length; i++)
             {
                 if(config.ContainsKey(i))

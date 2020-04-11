@@ -27,6 +27,9 @@ namespace gamepad_mouse_controller.Actions
             
             action = new BrowserForwardAction();
             actionMap.Add(action.Name, action);
+            
+            action = new MouseScrollAction();
+            actionMap.Add(action.Name, action);
         }
 
         public static Dictionary<string, IAction> GetActionMap()
