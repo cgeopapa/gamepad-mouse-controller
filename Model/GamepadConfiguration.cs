@@ -27,6 +27,8 @@ namespace gamepad_mouse_controller.Model
                 {
                     { 0, "MouseLeftClickAction" },
                     { 1, "MouseRightClickAction" },
+                    { 4, "BrowserBackAction" },
+                    { 5, "BrowserForwardAction" },
                     { 7, "WindowsKeyAction" },
                     { length++, "MouseMoveAction" }
                 };

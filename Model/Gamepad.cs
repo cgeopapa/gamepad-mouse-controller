@@ -1,9 +1,7 @@
 ﻿using SlimDX.DirectInput;
 using System;
-using gamepad_mouse_controller.Actions;
 using System.ComponentModel;
 using System.Timers;
-using System.Collections.Generic;
 
 namespace gamepad_mouse_controller.Model
 {

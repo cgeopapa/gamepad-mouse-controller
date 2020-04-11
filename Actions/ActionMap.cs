@@ -21,6 +21,12 @@ namespace gamepad_mouse_controller.Actions
 
             action = new WindowsKeyAction();
             actionMap.Add(action.Name, action);
+
+            action = new BrowserBackAction();
+            actionMap.Add(action.Name, action);
+            
+            action = new BrowserForwardAction();
+            actionMap.Add(action.Name, action);
         }
 
         public static Dictionary<string, IAction> GetActionMap()
