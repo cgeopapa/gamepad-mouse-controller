@@ -1,7 +1,7 @@
 ﻿using SlimDX.DirectInput;
 using System;
 using System.ComponentModel;
-using System.Timers;
+using System.Threading;
 
 namespace gamepad_mouse_controller.Model
 {
@@ -13,7 +13,7 @@ namespace gamepad_mouse_controller.Model
         private bool[] previousButtonState;
 
         private readonly BackgroundWorker worker;
-        private Timer timer = new Timer();
+        private Timer timer;
 
         public Gamepad(Joystick device)
         {
@@ -21,16 +21,18 @@ namespace gamepad_mouse_controller.Model
             previousButtonState = device.GetCurrentState().GetButtons();
             configuration = new GamepadConfiguration("gamepad01", 10);
 
-            worker = new BackgroundWorker();
-            timer.Elapsed += new ElapsedEventHandler(ManageInput);
+            timer = new Timer(ManageInput, new AutoResetEvent(false), 0, 30);
 
-            timer.Interval = 10;
-            timer.Enabled = true;
+            //worker = new BackgroundWorker();
+            //timer.Elapsed += new ElapsedEventHandler(ManageInput);
 
-            worker.RunWorkerAsync();
+            //timer.Interval = 10;
+            //timer.Enabled = true;
+
+            //worker.RunWorkerAsync();
         }
 
-        private void ManageInput(object sender, ElapsedEventArgs e)
+        private void ManageInput(object sender)
         {
             JoystickState state = device.GetCurrentState();
             bool[] curButtonState = state.GetButtons();

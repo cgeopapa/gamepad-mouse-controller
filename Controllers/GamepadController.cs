@@ -1,23 +1,24 @@
 ﻿using gamepad_mouse_controller.Model;
+
 using SlimDX.DirectInput;
 using System.Collections.Generic;
 
-namespace gamepad_mouse_controller.Controller
+namespace gamepad_mouse_controller.Controllers
 {
     class GamepadController
     {
-        public Gamepad[] gamepads;
+        public Model.Gamepad[] Gamepads { get; }
 
         public GamepadController()
         {
-            gamepads = GetDevices();
+            Gamepads = GetDevices();
         }
 
-        public Gamepad[] GetDevices()
+        public Model.Gamepad[] GetDevices()
         {
             DirectInput input = new DirectInput();
             IList<DeviceInstance> deviceInstances = input.GetDevices(DeviceClass.GameController, DeviceEnumerationFlags.AttachedOnly);
-            List<Gamepad> joysticks = new List<Gamepad>();
+            List<Model.Gamepad> joysticks = new List<Model.Gamepad>();
             foreach (DeviceInstance device in deviceInstances)
             {
                 try
@@ -30,13 +31,13 @@ namespace gamepad_mouse_controller.Controller
                         if ((deviceObject.ObjectType & ObjectDeviceType.Axis) != 0)
                         {
                             stick.GetObjectPropertiesById((int)deviceObject.ObjectType).SetRange(-10, 10);
-                            stick.GetObjectPropertiesById((int)deviceObject.ObjectType).DeadZone = 500;
+                            stick.GetObjectPropertiesById((int)deviceObject.ObjectType).DeadZone = 100;
                         }
                     }
-                    joysticks.Add(new Gamepad(stick));
+                    joysticks.Add(new Model.Gamepad(stick));
                 }
                 catch (DirectInputException)
-                {}
+                { }
             }
             return joysticks.ToArray();
         }
