@@ -7,6 +7,7 @@ namespace gamepad_mouse_controller.Model
 {
     class GamepadConfiguration
     {
+        private const string FILE_EXTENTION = ".gpconf";
         private readonly string name;
         private Dictionary<int, string> config;
 
@@ -48,7 +49,7 @@ namespace gamepad_mouse_controller.Model
 
         public void Save()
         {
-            using StreamWriter file = new StreamWriter(string.Format("{0}.txt", name));
+            StreamWriter file = new StreamWriter(name + FILE_EXTENTION);
             file.Write(JsonConvert.SerializeObject(config));
             file.Flush();
             file.Close();
@@ -56,7 +57,7 @@ namespace gamepad_mouse_controller.Model
 
         public void Load()
         {
-            using StreamReader file = new StreamReader(string.Format("{0}.txt", name));
+            StreamReader file = new StreamReader(name + FILE_EXTENTION);
             config = JsonConvert.DeserializeObject<Dictionary<int, string>>(file.ReadToEnd());
             file.Close();
         }

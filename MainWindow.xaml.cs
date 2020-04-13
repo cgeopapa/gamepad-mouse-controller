@@ -1,13 +1,11 @@
 ﻿using gamepad_mouse_controller.Controller;
-using gamepad_mouse_controller.Actions;
+using System;
+using System.ComponentModel;
 using System.Windows;
-using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace gamepad_mouse_controller
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private readonly GamepadController gamepadController = new GamepadController();
@@ -15,6 +13,29 @@ namespace gamepad_mouse_controller
         public MainWindow()
         {
             InitializeComponent();
+            Hide();
+
+            NotifyIcon ni = new NotifyIcon
+            {
+                Icon = new System.Drawing.Icon("Main.ico"),
+                Visible = true
+            };
+            ni.DoubleClick += ShowSettings;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            e.Cancel = true;
+
+            Hide();
+
+            base.OnClosing(e);
+        }
+
+        public void ShowSettings(object sender, EventArgs args)
+        {
+            Show();
+            WindowState = WindowState.Normal;
         }
     }
 }

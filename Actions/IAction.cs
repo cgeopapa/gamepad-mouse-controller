@@ -2,8 +2,8 @@
 {
     interface IAction
     {
-        public string Name { get; }
-        public void Execute(bool up);
-        public void Execute(int x, int y);
+        string Name { get; }
+        void Execute(bool up);
+        void Execute(int x, int y);
     }
 }

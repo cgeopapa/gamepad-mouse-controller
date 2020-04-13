@@ -6,11 +6,11 @@ namespace gamepad_mouse_controller.Controller
 {
     class GamepadController
     {
-        public Gamepad[] gamepads;
+        public Gamepad[] Gamepads { get; }
 
         public GamepadController()
         {
-            gamepads = GetDevices();
+            Gamepads = GetDevices();
         }
 
         public Gamepad[] GetDevices()
