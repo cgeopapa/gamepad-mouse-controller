@@ -20,7 +20,9 @@ namespace gamepad_mouse_controller
             {
                 Show();
 
-                content.Content = gamepad.index;
+                Title = string.Format("Controller {0} Settings", gamepad.index);
+                mouseSesitivitySlider.Value = gamepad.mouseSensitivity;
+                scrollSesitivitySlider.Value = gamepad.scrollSensitivity;
             });
         }
 
@@ -31,6 +33,16 @@ namespace gamepad_mouse_controller
             Hide();
 
             base.OnClosing(e);
+        }
+
+        private void mouseSesitivitySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            gamepad.mouseSensitivity = (float)mouseSesitivitySlider.Value + .2f;
+        }
+
+        private void scrollSesitivitySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            gamepad.scrollSensitivity = (int)scrollSesitivitySlider.Value;
         }
     }
 }

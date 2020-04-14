@@ -14,6 +14,8 @@ namespace gamepad_mouse_controller.Model
         private readonly Timer timer;
 
         public int index;
+        public float mouseSensitivity = 1;
+        public int scrollSensitivity = 1;
 
         public Gamepad(Joystick device, int index)
         {
@@ -33,16 +35,12 @@ namespace gamepad_mouse_controller.Model
             JoystickState state = device.GetCurrentState();
             bool[] curButtonState = state.GetButtons();
 
-            //int y = state.Y;
-            //int x = state.X;
-            args.x = state.X;
-            args.y = state.Y;
+            args.x = (int)(state.X * mouseSensitivity);
+            args.y = (int)(state.Y * mouseSensitivity);
             configuration.action[10].Execute(args);
 
-            //y = -state.RotationY / 10;
-            //x = state.RotationX / 10;
-            args.x = state.RotationX / 10;
-            args.y = -state.RotationY / 10;
+            args.x = state.RotationX / 10 * scrollSensitivity;
+            args.y = -state.RotationY / 10 * scrollSensitivity;
             configuration.action[11].Execute(args);
 
             for (int i = 0; i < 10; i++)

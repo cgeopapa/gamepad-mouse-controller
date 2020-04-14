@@ -14,7 +14,7 @@
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Vertical" Margin="10">
             <Button x:Name="activtionButton" Content="Turn off Controller" FontSize="26"/>
-            <Label x:Name="stateLabel" Content="Currently: Active" FontSize="18"/>
+            <Label x:Name="stateLabel" Foreground="White" Content="Currently: Active" FontSize="18"/>
         </StackPanel>
         <StackPanel Orientation="Vertical" Grid.Column="1" Margin="10">
             <StackPanel.Resources>
@@ -24,11 +24,11 @@
             </StackPanel.Resources>
             <DockPanel VerticalAlignment="Center">
                 <TextBlock Text="Mouse Sensitivity: " TextWrapping="WrapWithOverflow" Width="100" DockPanel.Dock="Left"/>
-                <Slider x:Name="mouseSesitivitySlider" DockPanel.Dock="Right"/>
+                <Slider x:Name="mouseSesitivitySlider" DockPanel.Dock="Right" AutoToolTipPrecision="1" ValueChanged="mouseSesitivitySlider_ValueChanged" Maximum="2.8" SmallChange="0.2"/>
             </DockPanel>
             <DockPanel VerticalAlignment="Center">
                 <TextBlock Text="Scroll Sensitivity: " TextWrapping="WrapWithOverflow" Width="100" DockPanel.Dock="Left"/>
-                <Slider x:Name="scrollSesitivitySlider" DockPanel.Dock="Right"/>
+                <Slider x:Name="scrollSesitivitySlider" Maximum="10" DockPanel.Dock="Right" ValueChanged="scrollSesitivitySlider_ValueChanged"/>
             </DockPanel>
         </StackPanel>
     </Grid>
