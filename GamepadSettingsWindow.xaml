@@ -4,9 +4,32 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:gamepad_mouse_controller"
+        Background="{DynamicResource {x:Static SystemColors.WindowColor}}"
         mc:Ignorable="d"
         Title="GamepadSettingsWindow" Height="450" Width="800">
     <Grid>
-        <Label x:Name="content" FontSize="72" Content="Content"></Label>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Vertical" Margin="10">
+            <Button x:Name="activtionButton" Content="Turn off Controller" FontSize="26"/>
+            <Label x:Name="stateLabel" Content="Currently: Active" FontSize="18"/>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Grid.Column="1" Margin="10">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type DockPanel}">
+                    <Setter Property="Margin" Value="8"/>
+                </Style>
+            </StackPanel.Resources>
+            <DockPanel VerticalAlignment="Center">
+                <TextBlock Text="Mouse Sensitivity: " TextWrapping="WrapWithOverflow" Width="100" DockPanel.Dock="Left"/>
+                <Slider x:Name="mouseSesitivitySlider" DockPanel.Dock="Right"/>
+            </DockPanel>
+            <DockPanel VerticalAlignment="Center">
+                <TextBlock Text="Scroll Sensitivity: " TextWrapping="WrapWithOverflow" Width="100" DockPanel.Dock="Left"/>
+                <Slider x:Name="scrollSesitivitySlider" DockPanel.Dock="Right"/>
+            </DockPanel>
+        </StackPanel>
     </Grid>
 </Window>
