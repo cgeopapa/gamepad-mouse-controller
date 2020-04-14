@@ -5,7 +5,7 @@
     <TargetFramework>net472</TargetFramework>
     <RootNamespace>gamepad_mouse_controller</RootNamespace>
     <UseWPF>true</UseWPF>
-    <StartupObject>gamepad_mouse_controller.Program</StartupObject>
+    <StartupObject></StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

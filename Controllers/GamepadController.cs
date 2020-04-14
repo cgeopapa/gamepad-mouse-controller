@@ -6,7 +6,7 @@ namespace gamepad_mouse_controller.Controller
 {
     class GamepadController
     {
-        public Gamepad[] Gamepads { get; }
+        public static Gamepad[] Gamepads { get; private set; }
 
         public GamepadController()
         {
@@ -15,6 +15,8 @@ namespace gamepad_mouse_controller.Controller
 
         public Gamepad[] GetDevices()
         {
+            int i = 1;
+
             DirectInput input = new DirectInput();
             IList<DeviceInstance> deviceInstances = input.GetDevices(DeviceClass.GameController, DeviceEnumerationFlags.AttachedOnly);
             List<Gamepad> joysticks = new List<Gamepad>();
@@ -33,7 +35,7 @@ namespace gamepad_mouse_controller.Controller
                             stick.GetObjectPropertiesById((int)deviceObject.ObjectType).DeadZone = 500;
                         }
                     }
-                    joysticks.Add(new Gamepad(stick));
+                    joysticks.Add(new Gamepad(stick, i++));
                 }
                 catch (DirectInputException)
                 {}

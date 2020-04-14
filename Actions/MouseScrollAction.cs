@@ -1,4 +1,5 @@
-﻿using System;
+﻿using gamepad_mouse_controller.Model;
+using System;
 using WindowsInput;
 
 namespace gamepad_mouse_controller.Actions
@@ -18,6 +19,12 @@ namespace gamepad_mouse_controller.Actions
         { 
             input.Mouse.HorizontalScroll(x);
             input.Mouse.VerticalScroll(y);
+        }
+
+        public void Execute(ActionArgs args)
+        {
+            input.Mouse.HorizontalScroll(args.x);
+            input.Mouse.VerticalScroll(args.y);
         }
     }
 }

@@ -1,34 +1,31 @@
 ﻿using SlimDX.DirectInput;
-using System;
-using System.ComponentModel;
 using System.Threading;
 
 namespace gamepad_mouse_controller.Model
 {
-    class Gamepad
+    public class Gamepad
     {
         private readonly GamepadConfiguration configuration;
+        private readonly GamepadSettingsWindow window;
+        private readonly ActionArgs args;
+        private readonly Joystick device;
 
-        public readonly Joystick device;
         private bool[] previousButtonState;
-
         private readonly Timer timer;
 
-        public Gamepad(Joystick device)
+        public int index;
+
+        public Gamepad(Joystick device, int index)
         {
+            this.index = index;
             this.device = device;
             previousButtonState = device.GetCurrentState().GetButtons();
+
             configuration = new GamepadConfiguration("gamepad01", 10);
+            window = new GamepadSettingsWindow(this);
+            args = new ActionArgs(this);
 
             timer = new Timer(ManageInput, new AutoResetEvent(false), 0, 20);
-
-            //worker = new BackgroundWorker();
-            //timer.Elapsed += new ElapsedEventHandler(ManageInput);
-
-            //timer.Interval = 10;
-            //timer.Enabled = true;
-
-            //worker.RunWorkerAsync();
         }
 
         private void ManageInput(object e)
@@ -36,13 +33,17 @@ namespace gamepad_mouse_controller.Model
             JoystickState state = device.GetCurrentState();
             bool[] curButtonState = state.GetButtons();
 
-            int y = state.Y;
-            int x = state.X;
-            configuration.action[10].Execute(x, y);
+            //int y = state.Y;
+            //int x = state.X;
+            args.x = state.X;
+            args.y = state.Y;
+            configuration.action[10].Execute(args);
 
-            y = -state.RotationY / 10;
-            x = state.RotationX / 10;
-            configuration.action[11].Execute(x, y);
+            //y = -state.RotationY / 10;
+            //x = state.RotationX / 10;
+            args.x = state.RotationX / 10;
+            args.y = -state.RotationY / 10;
+            configuration.action[11].Execute(args);
 
             for (int i = 0; i < 10; i++)
             {
@@ -50,16 +51,23 @@ namespace gamepad_mouse_controller.Model
                 {
                     if (curButtonState[i] && !previousButtonState[i])
                     {
-                        configuration.action[i].Execute(true);
+                        args.up = true;
+                        configuration.action[i].Execute(args);
                     }
                     else if (!curButtonState[i] && previousButtonState[i])
                     {
-                        configuration.action[i].Execute(false);
+                        args.up = false;
+                        configuration.action[i].Execute(args);
                     }
                 }
-                catch (Exception) { }
+                catch (System.NotImplementedException) { }
             }
             previousButtonState = state.GetButtons();
+        }
+
+        public void ShowWindow()
+        {
+            window.ShowWindow();
         }
     }
 }

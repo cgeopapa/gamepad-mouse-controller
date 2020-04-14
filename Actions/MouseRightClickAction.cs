@@ -1,4 +1,5 @@
-﻿using WindowsInput;
+﻿using gamepad_mouse_controller.Model;
+using WindowsInput;
 
 namespace gamepad_mouse_controller.Actions
 {
@@ -23,6 +24,18 @@ namespace gamepad_mouse_controller.Actions
         public void Execute(int x, int y)
         {
             throw new System.NotImplementedException();
+        }
+
+        public void Execute(ActionArgs args)
+        {
+            if (args.up)
+            {
+                input.Mouse.RightButtonDown();
+            }
+            else
+            {
+                input.Mouse.RightButtonUp();
+            }
         }
     }
 }
