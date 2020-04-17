@@ -1,35 +1,28 @@
 ﻿<Window x:Class="gamepad_mouse_controller.GamepadSettingsWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:gamepad_mouse_controller"
-        Background="{DynamicResource {x:Static SystemColors.WindowColor}}"
-        mc:Ignorable="d"
-        Title="GamepadSettingsWindow" Height="450" Width="800">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <StackPanel Orientation="Vertical" Margin="10">
-            <Button x:Name="activtionButton" Content="Turn off Controller" FontSize="26"/>
-            <Label x:Name="stateLabel" Foreground="White" Content="Currently: Active" FontSize="18"/>
-        </StackPanel>
-        <StackPanel Orientation="Vertical" Grid.Column="1" Margin="10">
-            <StackPanel.Resources>
-                <Style TargetType="{x:Type DockPanel}">
-                    <Setter Property="Margin" Value="8"/>
-                </Style>
-            </StackPanel.Resources>
-            <DockPanel VerticalAlignment="Center">
-                <TextBlock Text="Mouse Sensitivity: " TextWrapping="WrapWithOverflow" Width="100" DockPanel.Dock="Left"/>
-                <Slider x:Name="mouseSesitivitySlider" DockPanel.Dock="Right" AutoToolTipPrecision="1" ValueChanged="mouseSesitivitySlider_ValueChanged" Maximum="2.8" SmallChange="0.2"/>
-            </DockPanel>
-            <DockPanel VerticalAlignment="Center">
-                <TextBlock Text="Scroll Sensitivity: " TextWrapping="WrapWithOverflow" Width="100" DockPanel.Dock="Left"/>
-                <Slider x:Name="scrollSesitivitySlider" Maximum="10" DockPanel.Dock="Right" ValueChanged="scrollSesitivitySlider_ValueChanged"/>
-            </DockPanel>
-        </StackPanel>
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:gamepad_mouse_controller" 
+    WindowStyle="None"
+    AllowsTransparency="True"
+    mc:Ignorable="d"
+    Title="GamepadSettingsWindow" Height="100" Width="400">
+    <Window.Background>
+        <SolidColorBrush Opacity="0"/>
+    </Window.Background>
+    <Grid KeyboardNavigation.DirectionalNavigation="Cycle">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <DockPanel x:Name="mouseDockPanel" VerticalAlignment="Stretch">
+            <TextBlock VerticalAlignment="Center" Margin="10, 0, 0, 0" Text="Mouse Sensitivity: " Foreground="White" TextWrapping="WrapWithOverflow" Width="100" DockPanel.Dock="Left"/>
+            <Slider x:Name="mouseSesitivitySlider" VerticalAlignment="Center" DockPanel.Dock="Right" ValueChanged="mouseSesitivitySlider_ValueChanged"/>
+        </DockPanel>
+        <DockPanel x:Name="scrollDockPanel" VerticalAlignment="Stretch" Grid.Row="1">
+            <TextBlock VerticalAlignment="Center" Margin="10, 0, 0, 0" Text="Scroll Sensitivity: " Foreground="White" TextWrapping="WrapWithOverflow" Width="100" DockPanel.Dock="Left"/>
+            <Slider x:Name="scrollSesitivitySlider" VerticalAlignment="Center" DockPanel.Dock="Right" ValueChanged="scrollSesitivitySlider_ValueChanged"/>
+        </DockPanel>
     </Grid>
 </Window>

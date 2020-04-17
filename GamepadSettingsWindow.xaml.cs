@@ -10,6 +10,8 @@ namespace gamepad_mouse_controller
         public GamepadSettingsWindow(Gamepad gamepad)
         {
             InitializeComponent();
+            mouseDockPanel.Style = FindResource("PanelBackground") as Style;
+            scrollDockPanel.Style = FindResource("PanelBackground") as Style;
             Hide();
             this.gamepad = gamepad;
         }
