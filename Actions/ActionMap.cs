@@ -12,26 +12,29 @@ namespace gamepad_mouse_controller.Actions
         {
             IAction action = new MouseLeftClickAction();
             actionMap.Add(action.Name, action);
-
             action = new MouseRightClickAction();
             actionMap.Add(action.Name, action);
-
             action = new MouseMoveAction();
             actionMap.Add(action.Name, action);
-
             action = new WindowsKeyAction();
             actionMap.Add(action.Name, action);
-
             action = new BrowserBackAction();
             actionMap.Add(action.Name, action);
-            
             action = new BrowserForwardAction();
             actionMap.Add(action.Name, action);
-            
             action = new MouseScrollAction();
             actionMap.Add(action.Name, action);
-
             action = new ShowSettingsAction();
+            actionMap.Add(action.Name, action);
+            action = new TabNextAction();
+            actionMap.Add(action.Name, action);
+            action = new RightArrowAction();
+            actionMap.Add(action.Name, action);
+            action = new LeftArrowAction();
+            actionMap.Add(action.Name, action);
+            action = new DownArrowAction();
+            actionMap.Add(action.Name, action);
+            action = new UpArrowAction();
             actionMap.Add(action.Name, action);
         }
 

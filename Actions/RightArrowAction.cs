@@ -5,21 +5,14 @@ using WindowsInput.Native;
 
 namespace gamepad_mouse_controller.Actions
 {
-    class BrowserBackAction : IAction
+    class RightArrowAction : IAction
     {
         private InputSimulator input = new InputSimulator();
         public string Name => GetType().Name;
 
         public void Execute(bool up)
         {
-            if (up)
-            {
-                input.Keyboard.KeyDown(VirtualKeyCode.BROWSER_BACK);
-            }
-            else
-            {
-                input.Keyboard.KeyUp(VirtualKeyCode.BROWSER_BACK);
-            }
+            throw new NotImplementedException();
         }
 
         public void Execute(int x, int y)
@@ -31,11 +24,11 @@ namespace gamepad_mouse_controller.Actions
         {
             if (args.down)
             {
-                input.Keyboard.KeyDown(VirtualKeyCode.BROWSER_BACK);
+                input.Keyboard.KeyDown(VirtualKeyCode.RIGHT);
             }
             else
             {
-                input.Keyboard.KeyUp(VirtualKeyCode.BROWSER_BACK);
+                input.Keyboard.KeyUp(VirtualKeyCode.RIGHT);
             }
         }
     }

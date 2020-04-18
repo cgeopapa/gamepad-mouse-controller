@@ -2,7 +2,7 @@
 {
     class ActionArgs
     {
-        public bool up;
+        public bool down;
         public int x, y;
         public Gamepad gamepad;
 

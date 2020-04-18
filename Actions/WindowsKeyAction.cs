@@ -29,7 +29,7 @@ namespace gamepad_mouse_controller.Actions
 
         public void Execute(ActionArgs args)
         {
-            if (args.up)
+            if (args.down)
             {
                 input.Keyboard.KeyDown(VirtualKeyCode.LWIN);
             }

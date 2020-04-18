@@ -7,34 +7,6 @@
     <Application.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="Button" TargetType="{x:Type Button}">
-                <Setter Property="FontSize" Value="28" />
-                <Setter Property="Background" Value="Black"/>
-                <Setter Property="Foreground" Value="White"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="Button">
-                            <Border BorderThickness="0">
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <ControlTemplate.Resources>
-                                
-                            </ControlTemplate.Resources>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True" >
-                                    <Setter Property="FontSize" Value="32"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-                <Style.Triggers>
-                    <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="FontSize" Value="39"/>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-
             <Style x:Key="PanelGradient" TargetType="{x:Type DockPanel}">
                 <Setter Property="Background">
                     <Setter.Value>
@@ -47,7 +19,7 @@
                                     <TranslateTransform/>
                                 </TransformGroup>
                             </LinearGradientBrush.RelativeTransform>
-                            <GradientStop Color="{x:Static SystemParameters.WindowGlassBrush}"/>
+                            <GradientStop Color="{x:Static SystemParameters.WindowGlassColor}"/>
                             <GradientStop Color="#00000000" Offset="0.7"/>
                         </LinearGradientBrush>
                     </Setter.Value>
@@ -78,6 +50,19 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
+
+            <ControlTemplate x:Key = "Slider" TargetType = "Slider">
+                
+            </ControlTemplate>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Purple.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>
     </Application.Resources>

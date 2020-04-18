@@ -1,6 +1,4 @@
 ﻿using gamepad_mouse_controller.Model;
-using WindowsInput;
-using WindowsInput.Native;
 
 namespace gamepad_mouse_controller.Actions
 {
@@ -20,7 +18,10 @@ namespace gamepad_mouse_controller.Actions
 
         public void Execute(ActionArgs args)
         {
-            args.gamepad.ShowWindow();
+            if (!args.down)
+            {
+                args.gamepad.ShowWindow();
+            }
         }
     }
 }

@@ -26,19 +26,23 @@ namespace gamepad_mouse_controller.Model
             {
                 config = new Dictionary<int, string>()
                 {
-                    { 0, "MouseLeftClickAction" },
-                    { 1, "MouseRightClickAction" },
-                    { 4, "BrowserBackAction" },
-                    { 5, "BrowserForwardAction" },
-                    { 6, "ShowSettingsAction" },
-                    { 7, "WindowsKeyAction" },
-                    { length++, "MouseMoveAction" },
-                    { length++, "MouseScrollAction" }
+                    { 0, typeof(MouseLeftClickAction).Name },
+                    { 1, typeof(MouseRightClickAction).Name },
+                    { 4, typeof(BrowserBackAction).Name },
+                    { 5, typeof(BrowserForwardAction).Name },
+                    { 6, typeof(ShowSettingsAction).Name },
+                    { 7, typeof(WindowsKeyAction).Name },
+                    { length++, typeof(UpArrowAction).Name },
+                    { length++, typeof(RightArrowAction).Name },
+                    { length++, typeof(DownArrowAction).Name },
+                    { length++, typeof(LeftArrowAction).Name },
+                    { length++, typeof(MouseMoveAction).Name },
+                    { length++, typeof(MouseScrollAction).Name },
                 };
                 //Save();
             }
 
-            action = new IAction[12];
+            action = new IAction[length];
             for(int i = 0; i < action.Length; i++)
             {
                 if(config.ContainsKey(i))
