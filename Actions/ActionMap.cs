@@ -36,6 +36,8 @@ namespace gamepad_mouse_controller.Actions
             actionMap.Add(action.Name, action);
             action = new UpArrowAction();
             actionMap.Add(action.Name, action);
+            action = new EnableDisableGamepadAction();
+            actionMap.Add(action.Name, action);
         }
 
         public static Dictionary<string, IAction> GetActionMap()

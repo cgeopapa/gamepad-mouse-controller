@@ -9,16 +9,6 @@ namespace gamepad_mouse_controller.Actions
         private InputSimulator input = new InputSimulator();
         public string Name => GetType().Name;
 
-        public void Execute(bool up)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Execute(int x, int y)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public void Execute(ActionArgs args)
         {
             if (args.down)
