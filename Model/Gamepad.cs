@@ -1,4 +1,5 @@
-﻿using SlimDX.DirectInput;
+﻿using gamepad_mouse_controller.Model.Buttons;
+using SlimDX.DirectInput;
 using System.Threading;
 
 namespace gamepad_mouse_controller.Model
@@ -12,6 +13,7 @@ namespace gamepad_mouse_controller.Model
 
         private bool[] previousButtonState;
         private int previousArrows;
+        private bool isActive = true;
         private readonly Timer timer;
 
         public int index;
@@ -32,6 +34,20 @@ namespace gamepad_mouse_controller.Model
             timer = new Timer(ManageInput, new AutoResetEvent(false), 0, 20);
         }
 
+        public void ChangeState()
+        {
+            if (isActive)
+            {
+                timer.Change(Timeout.Infinite, Timeout.Infinite);
+                isActive = false;
+            }
+            else
+            {
+                timer.Change(0, 20);
+                isActive = true;
+            }
+        }
+
         private void ManageInput(object e)
         {
             JoystickState state = device.GetCurrentState();
@@ -40,11 +56,11 @@ namespace gamepad_mouse_controller.Model
 
             args.x = (int)(state.X * mouseSensitivity);
             args.y = (int)(state.Y * mouseSensitivity);
-            configuration.action[14].Execute(args);
+            configuration.action[(int)GamepadButtons.LAxis].Execute(args);
 
             args.x = (int)(state.RotationX * scrollSensitivity);
             args.y = (int)(-state.RotationY * scrollSensitivity);
-            configuration.action[15].Execute(args);
+            configuration.action[(int)GamepadButtons.RAxis].Execute(args);
 
             for (int i = 0; i < 10; i++)
             {
@@ -61,7 +77,7 @@ namespace gamepad_mouse_controller.Model
                         configuration.action[i].Execute(args);
                     }
                 }
-                catch (System.Exception) { }
+                catch (System.NullReferenceException) { }
             }
             for(int i = 0; i <= 27000; i += 9000)
             {
@@ -76,6 +92,17 @@ namespace gamepad_mouse_controller.Model
                     configuration.action[10 + i / 9000].Execute(args);
                 }
             }
+            if(curButtonState[(int)GamepadButtons.L3] && !previousButtonState[(int)GamepadButtons.L3] && curButtonState[(int)GamepadButtons.R3] && !previousButtonState[(int)GamepadButtons.R3])
+            {
+                args.down = true;
+                configuration.action[(int)GamepadButtons.L3_R3].Execute(args);
+            }
+            else if(!curButtonState[(int)GamepadButtons.L3] && previousButtonState[(int)GamepadButtons.L3] && !curButtonState[(int)GamepadButtons.R3] && previousButtonState[(int)GamepadButtons.R3])
+            {
+                args.down = false;
+                configuration.action[(int)GamepadButtons.L3_R3].Execute(args);
+            }
+
             previousArrows = arrows;
             previousButtonState = state.GetButtons();
         }

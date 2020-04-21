@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using gamepad_mouse_controller.Actions;
+using gamepad_mouse_controller.Model.Buttons;
 using Newtonsoft.Json;
+using System.Linq;
+using System;
 
 namespace gamepad_mouse_controller.Model
 {
@@ -9,7 +12,7 @@ namespace gamepad_mouse_controller.Model
     {
         private const string FILE_EXTENTION = ".gpconf";
         private readonly string name;
-        private Dictionary<int, string> config;
+        private Dictionary<GamepadButtons, string> config;
 
         public IAction[] action;
 
@@ -24,30 +27,32 @@ namespace gamepad_mouse_controller.Model
             }
             catch(FileNotFoundException)
             {
-                config = new Dictionary<int, string>()
+                config = new Dictionary<GamepadButtons, string>()
                 {
-                    { 0, typeof(MouseLeftClickAction).Name },
-                    { 1, typeof(MouseRightClickAction).Name },
-                    { 4, typeof(BrowserBackAction).Name },
-                    { 5, typeof(BrowserForwardAction).Name },
-                    { 6, typeof(ShowSettingsAction).Name },
-                    { 7, typeof(WindowsKeyAction).Name },
-                    { length++, typeof(UpArrowAction).Name },
-                    { length++, typeof(RightArrowAction).Name },
-                    { length++, typeof(DownArrowAction).Name },
-                    { length++, typeof(LeftArrowAction).Name },
-                    { length++, typeof(MouseMoveAction).Name },
-                    { length++, typeof(MouseScrollAction).Name },
+                    { GamepadButtons.X, typeof(MouseLeftClickAction).Name },
+                    { GamepadButtons.O, typeof(MouseRightClickAction).Name },
+                    { GamepadButtons.L1, typeof(BrowserBackAction).Name },
+                    { GamepadButtons.R1, typeof(BrowserForwardAction).Name },
+                    { GamepadButtons.Select, typeof(ShowSettingsAction).Name },
+                    { GamepadButtons.Start, typeof(WindowsKeyAction).Name },
+                    { GamepadButtons.Up, typeof(UpArrowAction).Name },
+                    { GamepadButtons.Right, typeof(RightArrowAction).Name },
+                    { GamepadButtons.Down, typeof(DownArrowAction).Name },
+                    { GamepadButtons.Left, typeof(LeftArrowAction).Name },
+                    { GamepadButtons.LAxis, typeof(MouseMoveAction).Name },
+                    { GamepadButtons.RAxis, typeof(MouseScrollAction).Name },
+                    { GamepadButtons.L3_R3, typeof(EnableDisableGamepadAction).Name },
                 };
                 //Save();
             }
 
-            action = new IAction[length];
-            for(int i = 0; i < action.Length; i++)
+            int max = (int)(Enum.GetValues(typeof(GamepadButtons)).Cast<GamepadButtons>().Max() + 1);
+            action = new IAction[max];
+            foreach (GamepadButtons button in (GamepadButtons[])Enum.GetValues(typeof(GamepadButtons)))
             {
-                if(config.ContainsKey(i))
+                if(config.ContainsKey(button))
                 {
-                    action[i] = actionMap[config[i]];
+                    action[(int)button] = actionMap[config[button]];
                 }
             }
         }
@@ -63,7 +68,7 @@ namespace gamepad_mouse_controller.Model
         public void Load()
         {
             StreamReader file = new StreamReader(name + FILE_EXTENTION);
-            config = JsonConvert.DeserializeObject<Dictionary<int, string>>(file.ReadToEnd());
+            config = JsonConvert.DeserializeObject<Dictionary<GamepadButtons, string>>(file.ReadToEnd());
             file.Close();
         }
     }
