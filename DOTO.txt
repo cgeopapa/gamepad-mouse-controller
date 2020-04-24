@@ -1,7 +1,8 @@
-+ Windows Tablet mode on activate
++ Windows Tablet mode on activate   [DISCARTED]
 + Window
     + Sensitivity   [DONE]
     + Controlls
 + Arrows function as arrows [DONE]
 + Arrows + X launch app
 + Quick window change   [DONE]
++ Custom mouse pointer

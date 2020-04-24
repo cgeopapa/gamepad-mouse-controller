@@ -40,6 +40,7 @@ namespace gamepad_mouse_controller
                     Title = string.Format("Controller {0} Settings", gamepad.Index);
                     mouseSesitivitySlider.Value = gamepad.mouseSensitivity;
                     scrollSesitivitySlider.Value = gamepad.scrollSensitivity;
+                    Activate();
 
                     visible = true;
                 }
@@ -98,6 +99,11 @@ namespace gamepad_mouse_controller
 
                 e.Handled = true;
             }
+        }
+
+        private void MetroWindow_Deactivated(object sender, System.EventArgs e)
+        {
+            ShowWindow();
         }
     }
 }
