@@ -31,6 +31,7 @@ namespace gamepad_mouse_controller.Model
                 {
                     { GamepadButtons.X, typeof(MouseLeftClickAction).Name },
                     { GamepadButtons.O, typeof(MouseRightClickAction).Name },
+                    { GamepadButtons.Square, typeof(WindowChangeAction).Name },
                     { GamepadButtons.L1, typeof(BrowserBackAction).Name },
                     { GamepadButtons.R1, typeof(BrowserForwardAction).Name },
                     { GamepadButtons.Select, typeof(ShowSettingsAction).Name },

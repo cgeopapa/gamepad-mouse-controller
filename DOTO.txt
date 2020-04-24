@@ -1,7 +1,7 @@
-+ Windows Tabled mode on activate
++ Windows Tablet mode on activate
 + Window
-    + Sensitivity
+    + Sensitivity   [DONE]
     + Controlls
-+ Arrows function as arrows
++ Arrows function as arrows [DONE]
 + Arrows + X launch app
-+ Quick window change
++ Quick window change   [DONE]
