@@ -5,33 +5,32 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     mc:Ignorable="d"
-    Background="{DynamicResource {x:Static SystemColors.WindowColor}}"
-    Title="MainWindow" Height="250" Width="800" WindowStyle="SingleBorderWindow" WindowState="Minimized">
+    Title="MainWindow" Height="250" Width="800" WindowStyle="SingleBorderWindow">
 
     <Grid HorizontalAlignment="Stretch">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0" Margin="10" Orientation="Vertical">
-            <Button FontSize="32" HorizontalAlignment="Stretch" Content="DISABLE GAMEPAD" Click="Button_Click"></Button>
-            <TextBox FontSize="20" IsEnabled="False" Text="Currently: ACTIVE"/>
-        </StackPanel>
-        <StackPanel Grid.Column="1" Margin="10" Orientation="Vertical">
-        </StackPanel>
-        <ItemsControl Grid.Column="1" x:Name="gamepadList">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="100" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding Display}" FontSize="32px" VerticalAlignment="Center" />
-                        <Controls:ToggleSwitch Grid.Column="1" Header="State" IsChecked="{Binding IsActive}"/>
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <TabControl>
+            <TabItem Header="Power" Padding="20 0">
+                <StackPanel Orientation="Vertical">
+                    <Button x:Name="ShutdownButton" Content="Turn off the System" Margin="10" FontSize="16" Padding="15" Click="ShutdownButton_Click" />
+                    <Button x:Name="RestartButton" Content="Restart the System" Margin="10" FontSize="16" Padding="15" Click="RestartButton_Click" />
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Gamepads" Padding="20 0">
+                <ItemsControl x:Name="gamepadList">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="100" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Display}" FontSize="32px" VerticalAlignment="Center" />
+                                <Controls:ToggleSwitch Grid.Column="1" Header="State" IsChecked="{Binding IsActive}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Controls:MetroWindow>
