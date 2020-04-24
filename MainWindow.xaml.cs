@@ -3,18 +3,21 @@ using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Forms;
+using MahApps.Metro.Controls;
+using gamepad_mouse_controller.Model;
 
 namespace gamepad_mouse_controller
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         private readonly GamepadController gamepadController = new GamepadController();
 
         public MainWindow()
         {
             InitializeComponent();
+            gamepadList.ItemsSource = GamepadController.Gamepads;
             Hide();
-
+            
             NotifyIcon ni = new NotifyIcon
             {
                 Icon = new System.Drawing.Icon("Main.ico"),
@@ -36,6 +39,16 @@ namespace gamepad_mouse_controller
         {
             Show();
             WindowState = WindowState.Normal;
+        }
+
+        public static void Refresh(Gamepad gamepad)
+        {
+            
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }

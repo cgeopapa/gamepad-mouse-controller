@@ -5,7 +5,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:local="clr-namespace:gamepad_mouse_controller"
-    xmlns:controlzex="urn:controlzex" x:Class="gamepad_mouse_controller.GamepadSettingsWindow"
+    xmlns:controlzex="urn:controlzex" 
+    x:Class="gamepad_mouse_controller.GamepadSettingsWindow"
     ResizeMode="NoResize"
     mc:Ignorable="d"
     Title="GamepadSettingsWindow" Height="150" Width="700">

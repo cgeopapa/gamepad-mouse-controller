@@ -13,16 +13,24 @@ namespace gamepad_mouse_controller.Model
 
         private bool[] previousButtonState;
         private int previousArrows;
-        private bool isActive = true;
-        private readonly Timer timer;
+        public bool IsActive {get; set;}
+        private readonly System.Threading.Timer timer;
 
-        public int index;
+        public int Index { get; set; }
+        public string Display
+        {
+            get
+            {
+                return "Gamepad " + Index;
+            }
+        }
         public float mouseSensitivity = 1;
         public float scrollSensitivity = .1f;
 
         public Gamepad(Joystick device, int index)
         {
-            this.index = index;
+            this.Index = index;
+            IsActive = true;
             this.device = device;
             previousButtonState = device.GetCurrentState().GetButtons();
             previousArrows = -1;
@@ -31,21 +39,12 @@ namespace gamepad_mouse_controller.Model
             window = new GamepadSettingsWindow(this);
             args = new ActionArgs(this);
 
-            timer = new Timer(ManageInput, new AutoResetEvent(false), 0, 20);
+            timer = new System.Threading.Timer(ManageInput, new AutoResetEvent(false), 0, 20);
         }
 
         public void ChangeState()
         {
-            if (isActive)
-            {
-                timer.Change(Timeout.Infinite, Timeout.Infinite);
-                isActive = false;
-            }
-            else
-            {
-                timer.Change(0, 20);
-                isActive = true;
-            }
+            IsActive = !IsActive;
         }
 
         private void ManageInput(object e)
@@ -54,57 +53,55 @@ namespace gamepad_mouse_controller.Model
             bool[] curButtonState = state.GetButtons();
             int arrows = state.GetPointOfViewControllers()[0];
 
-            args.x = (int)(state.X * mouseSensitivity);
-            args.y = (int)(state.Y * mouseSensitivity);
-            configuration.action[(int)GamepadButtons.LAxis].Execute(args);
-
-            args.x = (int)(state.RotationX * scrollSensitivity);
-            args.y = (int)(-state.RotationY * scrollSensitivity);
-            configuration.action[(int)GamepadButtons.RAxis].Execute(args);
-
-            for (int i = 0; i < 10; i++)
+            if (IsActive)
             {
-                try
+                args.x = (int)(state.X * mouseSensitivity);
+                args.y = (int)(state.Y * mouseSensitivity);
+                configuration.action[(int)GamepadButtons.LAxis].Execute(args);
+
+                args.x = (int)(state.RotationX * scrollSensitivity);
+                args.y = (int)(-state.RotationY * scrollSensitivity);
+                configuration.action[(int)GamepadButtons.RAxis].Execute(args);
+
+                for (int i = 0; i < 10; i++)
                 {
-                    if (curButtonState[i] && !previousButtonState[i])
+                    try
+                    {
+                        if (curButtonState[i] && !previousButtonState[i])
+                        {
+                            args.down = true;
+                            configuration.action[i].Execute(args);
+                        }
+                        else if (!curButtonState[i] && previousButtonState[i])
+                        {
+                            args.down = false;
+                            configuration.action[i].Execute(args);
+                        }
+                    }
+                    catch (System.NullReferenceException) { }
+                }
+                for (int i = 0; i <= 27000; i += 9000)
+                {
+                    if (arrows == i && previousArrows != i)
                     {
                         args.down = true;
-                        configuration.action[i].Execute(args);
+                        configuration.action[10 + i / 9000].Execute(args);
                     }
-                    else if (!curButtonState[i] && previousButtonState[i])
+                    else if (arrows != i && previousArrows == i)
                     {
                         args.down = false;
-                        configuration.action[i].Execute(args);
+                        configuration.action[10 + i / 9000].Execute(args);
                     }
                 }
-                catch (System.NullReferenceException) { }
             }
-            for(int i = 0; i <= 27000; i += 9000)
-            {
-                if(arrows == i && previousArrows != i)
-                {
-                    args.down = true;
-                    configuration.action[10 + i / 9000].Execute(args);
-                }
-                else if(arrows != i && previousArrows == i)
-                {
-                    args.down = false;
-                    configuration.action[10 + i / 9000].Execute(args);
-                }
-            }
-            if(curButtonState[(int)GamepadButtons.L3] && !previousButtonState[(int)GamepadButtons.L3] && curButtonState[(int)GamepadButtons.R3] && !previousButtonState[(int)GamepadButtons.R3])
+            if(curButtonState[(int)GamepadButtons.L3] && !previousButtonState[(int)GamepadButtons.L3] && curButtonState[(int)GamepadButtons.R3] || curButtonState[(int)GamepadButtons.R3] && !previousButtonState[(int)GamepadButtons.R3] && curButtonState[(int)GamepadButtons.L3])
             {
                 args.down = true;
                 configuration.action[(int)GamepadButtons.L3_R3].Execute(args);
             }
-            else if(!curButtonState[(int)GamepadButtons.L3] && previousButtonState[(int)GamepadButtons.L3] && !curButtonState[(int)GamepadButtons.R3] && previousButtonState[(int)GamepadButtons.R3])
-            {
-                args.down = false;
-                configuration.action[(int)GamepadButtons.L3_R3].Execute(args);
-            }
 
             previousArrows = arrows;
-            previousButtonState = state.GetButtons();
+            previousButtonState = curButtonState;
         }
 
         public void ShowWindow()

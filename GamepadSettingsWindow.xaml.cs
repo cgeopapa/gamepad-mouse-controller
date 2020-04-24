@@ -37,7 +37,7 @@ namespace gamepad_mouse_controller
                 {
                     Show();
 
-                    Title = string.Format("Controller {0} Settings", gamepad.index);
+                    Title = string.Format("Controller {0} Settings", gamepad.Index);
                     mouseSesitivitySlider.Value = gamepad.mouseSensitivity;
                     scrollSesitivitySlider.Value = gamepad.scrollSensitivity;
 

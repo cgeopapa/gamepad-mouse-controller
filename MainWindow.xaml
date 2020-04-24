@@ -1,11 +1,12 @@
-﻿<Window x:Class="gamepad_mouse_controller.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
-        Background="{DynamicResource {x:Static SystemColors.WindowColor}}"
-        Title="MainWindow" Height="450" Width="800" WindowStyle="SingleBorderWindow" WindowState="Minimized">
+﻿<Controls:MetroWindow x:Class="gamepad_mouse_controller.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    mc:Ignorable="d"
+    Background="{DynamicResource {x:Static SystemColors.WindowColor}}"
+    Title="MainWindow" Height="250" Width="800" WindowStyle="SingleBorderWindow" WindowState="Minimized">
 
     <Grid HorizontalAlignment="Stretch">
         <Grid.ColumnDefinitions>
@@ -13,10 +14,24 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" Margin="10" Orientation="Vertical">
-            <Button FontSize="32" HorizontalAlignment="Stretch" Content="DISABLE CONTROLLER"></Button>
-            <TextBox FontSize="20" Text="Currently: ACTIVE"/>
+            <Button FontSize="32" HorizontalAlignment="Stretch" Content="DISABLE GAMEPAD" Click="Button_Click"></Button>
+            <TextBox FontSize="20" IsEnabled="False" Text="Currently: ACTIVE"/>
         </StackPanel>
         <StackPanel Grid.Column="1" Margin="10" Orientation="Vertical">
         </StackPanel>
+        <ItemsControl Grid.Column="1" x:Name="gamepadList">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="100" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Display}" FontSize="32px" VerticalAlignment="Center" />
+                        <Controls:ToggleSwitch Grid.Column="1" Header="State" IsChecked="{Binding IsActive}"/>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
-</Window>
+</Controls:MetroWindow>
