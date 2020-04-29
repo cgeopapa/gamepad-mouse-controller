@@ -13,3 +13,5 @@ This application allows you to control your computer via compatable gamepad.
 | `R1`      | Browser Forward       |
 | `LAxis`   | Mouse Move            |
 | `RAxis`   | Scroll                |
+| `D-Pad`   | Arrow Keys            |
+| `L3+R3`   | Disable Controller    |
