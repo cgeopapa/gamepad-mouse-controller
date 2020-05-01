@@ -41,6 +41,7 @@ namespace gamepad_mouse_controller.Model
 
             //timer = new System.Threading.Timer(ManageInput, new AutoResetEvent(false), 0, 20);
             timer = new Thread(new ThreadStart(ManageInput));
+            timer.IsBackground = true;
             timer.Start();
         }
 

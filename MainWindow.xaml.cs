@@ -1,8 +1,6 @@
 ﻿using gamepad_mouse_controller.Controller;
-using System;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Forms;
 using MahApps.Metro.Controls;
 using gamepad_mouse_controller.Model;
 using System.Diagnostics;
@@ -18,13 +16,6 @@ namespace gamepad_mouse_controller
             InitializeComponent();
             gamepadList.ItemsSource = GamepadController.Gamepads;
             Hide();
-            
-            NotifyIcon ni = new NotifyIcon
-            {
-                Icon = new System.Drawing.Icon("Main.ico"),
-                Visible = true
-            };
-            ni.DoubleClick += ShowSettings;
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -36,7 +27,7 @@ namespace gamepad_mouse_controller
             base.OnClosing(e);
         }
 
-        public void ShowSettings(object sender, EventArgs args)
+        public void ShowSettings()
         {
             Show();
             WindowState = WindowState.Normal;
@@ -63,6 +54,16 @@ namespace gamepad_mouse_controller
             {
                 Process.Start("shutdown", "/r /t 0");
             }
+        }
+
+        private void MenuItem_Exit_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void TaskbarIcon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)
+        {
+            ShowSettings();
         }
     }
 }
