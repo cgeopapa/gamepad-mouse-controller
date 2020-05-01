@@ -6,6 +6,7 @@
     <RootNamespace>gamepad_mouse_controller</RootNamespace>
     <UseWPF>true</UseWPF>
     <StartupObject></StartupObject>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>
