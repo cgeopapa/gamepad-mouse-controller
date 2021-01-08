@@ -1,46 +1,52 @@
-﻿using gamepad_mouse_controller.Model;
-using SlimDX.DirectInput;
+﻿using OpenTK.Input;
+using System.Threading;
+using System;
+using gamepad_mouse_controller.Model;
 using System.Collections.Generic;
 
-namespace gamepad_mouse_controller.Controller
+namespace gamepad_mouse
 {
-    class GamepadController
+    public delegate void OnControllerConnected(int index);
+    partial class GamepadController
     {
-        public static Gamepad[] Gamepads { get; private set; }
+        public static event OnControllerConnected onControllerConnected;
+        public static List<Gamepad> gamepads { get; private set;} = new List<Gamepad>();
+
+        private static int gamepadIndex = 0;
+        private static Timer timer;
 
         public GamepadController()
         {
-            Gamepads = GetDevices();
+            GamePadState state = GamePad.GetState(gamepadIndex);
+            while (state.IsConnected)
+            {
+                gamepads.Add(new Gamepad(gamepadIndex));
+                onControllerConnected?.Invoke(gamepadIndex);
+                state = GamePad.GetState(++gamepadIndex);
+            }
+
+            timer = new Timer(CheckForNewGamepad, new AutoResetEvent(false), 1, 3000);
         }
 
-        public Gamepad[] GetDevices()
+        ~GamepadController()
         {
-            int i = 1;
+            timer.Dispose();
+        }
 
-            DirectInput input = new DirectInput();
-            IList<DeviceInstance> deviceInstances = input.GetDevices(DeviceClass.GameController, DeviceEnumerationFlags.AttachedOnly);
-            List<Gamepad> joysticks = new List<Gamepad>();
-            foreach (DeviceInstance device in deviceInstances)
+        private void CheckForNewGamepad(Object stateInfo)
+        {
+            GamePadState state = GamePad.GetState(gamepadIndex);
+            if (state.IsConnected)
             {
-                try
-                {
-                    var stick = new Joystick(input, device.InstanceGuid);
-                    stick.Acquire();
-
-                    foreach (DeviceObjectInstance deviceObject in stick.GetObjects())
-                    {
-                        if ((deviceObject.ObjectType & ObjectDeviceType.Axis) != 0)
-                        {
-                            stick.GetObjectPropertiesById((int)deviceObject.ObjectType).SetRange(-10, 10);
-                            stick.GetObjectPropertiesById((int)deviceObject.ObjectType).DeadZone = 500;
-                        }
-                    }
-                    joysticks.Add(new Gamepad(stick, i++));
-                }
-                catch (DirectInputException)
-                {}
+                onControllerConnected?.Invoke(gamepadIndex);
+                gamepadIndex++;
             }
-            return joysticks.ToArray();
+            state = GamePad.GetState(gamepadIndex - 1);
+            if (!state.IsConnected)
+            {
+                // Rase disconnected event
+                gamepadIndex--;
+            }
         }
     }
 }

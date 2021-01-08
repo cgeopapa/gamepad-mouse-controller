@@ -1,6 +1,4 @@
-﻿using gamepad_mouse_controller.Model;
-
-namespace gamepad_mouse_controller.Actions
+﻿namespace gamepad_mouse_controller.Model
 {
     interface IAction
     {

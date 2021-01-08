@@ -1,5 +1,5 @@
-﻿using gamepad_mouse_controller.Model.Buttons;
-using SlimDX.DirectInput;
+﻿using OpenTK.Input;
+using System;
 using System.Threading;
 
 namespace gamepad_mouse_controller.Model
@@ -9,40 +9,37 @@ namespace gamepad_mouse_controller.Model
         private readonly GamepadConfiguration configuration;
         private readonly GamepadSettingsWindow window;
         private readonly ActionArgs args;
-        private readonly Joystick device;
+        private readonly Timer timer;
 
-        private bool[] previousButtonState;
+        private GamePadState previousState;
         private int previousArrows;
         public bool IsActive {get; set;}
-        private readonly System.Threading.Thread timer;
 
-        public int Index { get; set; }
+        public int index;
         public string Display
         {
             get
             {
-                return "Gamepad " + Index;
+                return "Gamepad " + index;
             }
         }
-        public float mouseSensitivity = 1;
-        public float scrollSensitivity = .1f;
 
-        public Gamepad(Joystick device, int index)
+        public int mouseSensitivity = 600;
+        public float scrollSensitivity = 1.1f;
+        public int refreshRate = 60;
+
+        public Gamepad(int index)
         {
-            this.Index = index;
+            this.index = index;
             IsActive = true;
-            this.device = device;
-            previousButtonState = device.GetCurrentState().GetButtons();
+            previousState = GamePad.GetState(index);
             previousArrows = -1;
 
             configuration = new GamepadConfiguration("gamepad01", 10);
             window = new GamepadSettingsWindow(this);
             args = new ActionArgs(this);
 
-            //timer = new System.Threading.Timer(ManageInput, new AutoResetEvent(false), 0, 20);
-            timer = new Thread(new ThreadStart(ManageInput));
-            timer.IsBackground = true;
-            timer.Start();
+            timer = new Timer(ManageInput, new AutoResetEvent(false), 0, 1000 / refreshRate);
         }
 
         public void ChangeState()
@@ -50,66 +47,140 @@ namespace gamepad_mouse_controller.Model
             IsActive = !IsActive;
         }
 
-        private void ManageInput()
+        private void ManageInput(Object sender)
         {
-            while (true)
+            GamePadState state = GamePad.GetState(index);
+
+            if (IsActive)
             {
-                JoystickState state = device.GetCurrentState();
-                bool[] curButtonState = state.GetButtons();
-                int arrows = state.GetPointOfViewControllers()[0];
+                int s = mouseSensitivity / refreshRate;
+                var lStick = state.ThumbSticks.Left;
+                args.x = (int)(lStick.X * s);
+                args.y = (int)(lStick.Y * (-s));
+                configuration.config[Buttons.LAxis].Execute(args);
 
-                if (IsActive)
+                var rStick = state.ThumbSticks.Right;
+                args.x = (int)(rStick.X * scrollSensitivity);
+                args.y = (int)(rStick.Y * scrollSensitivity);
+                configuration.config[Buttons.RAxis].Execute(args);
+
+                var buts = state.Buttons;
+                var prevbuts = previousState.Buttons;
+                if (buts.GetHashCode() != prevbuts.GetHashCode())
                 {
-                    args.x = (int)(state.X * mouseSensitivity);
-                    args.y = (int)(state.Y * mouseSensitivity);
-                    configuration.action[(int)GamepadButtons.LAxis].Execute(args);
-
-                    args.x = (int)(state.RotationX * scrollSensitivity);
-                    args.y = (int)(-state.RotationY * scrollSensitivity);
-                    configuration.action[(int)GamepadButtons.RAxis].Execute(args);
-
-                    for (int i = 0; i < 10; i++)
+                    if (prevbuts.A == ButtonState.Released && buts.A == ButtonState.Pressed)
                     {
-                        try
-                        {
-                            if (curButtonState[i] && !previousButtonState[i])
-                            {
-                                args.down = true;
-                                configuration.action[i].Execute(args);
-                            }
-                            else if (!curButtonState[i] && previousButtonState[i])
-                            {
-                                args.down = false;
-                                configuration.action[i].Execute(args);
-                            }
-                        }
-                        catch (System.NullReferenceException) { }
+                        args.down = true;
+                        configuration.config[Buttons.A].Execute(args);
                     }
-                    for (int i = 0; i <= 27000; i += 9000)
+                    else if (prevbuts.A == ButtonState.Pressed && buts.A == ButtonState.Released)
                     {
-                        if (arrows == i && previousArrows != i)
-                        {
-                            args.down = true;
-                            configuration.action[10 + i / 9000].Execute(args);
-                        }
-                        else if (arrows != i && previousArrows == i)
-                        {
-                            args.down = false;
-                            configuration.action[10 + i / 9000].Execute(args);
-                        }
+                        args.down = false;
+                        configuration.config[Buttons.A].Execute(args);
+                    }
+
+                    if (prevbuts.B == ButtonState.Released && buts.B == ButtonState.Pressed)
+                    {
+                        args.down = true;
+                        configuration.config[Buttons.B].Execute(args);
+                    }
+                    else if (prevbuts.B == ButtonState.Pressed && buts.B == ButtonState.Released)
+                    {
+                        args.down = false;
+                        configuration.config[Buttons.B].Execute(args);
+                    }
+
+                    if (prevbuts.X == ButtonState.Released && buts.X == ButtonState.Pressed)
+                    {
+                        args.down = true;
+                        configuration.config[Buttons.X].Execute(args);
+                    }
+                    else if (prevbuts.X == ButtonState.Pressed && buts.X == ButtonState.Released)
+                    {
+                        args.down = false;
+                        configuration.config[Buttons.X].Execute(args);
+                    }
+
+                    if (prevbuts.Y == ButtonState.Released && buts.Y == ButtonState.Pressed)
+                    {
+                        args.down = true;
+                        configuration.config[Buttons.Y].Execute(args);
+                    }
+                    else if (prevbuts.Y == ButtonState.Pressed && buts.Y == ButtonState.Released)
+                    {
+                        args.down = false;
+                        configuration.config[Buttons.Y].Execute(args);
+                    }
+
+                    if (prevbuts.Back == ButtonState.Released && buts.Back == ButtonState.Pressed)
+                    {
+                        args.down = true;
+                        configuration.config[Buttons.Back].Execute(args);
+                    }
+                    else if (prevbuts.Back == ButtonState.Pressed && buts.Back == ButtonState.Released)
+                    {
+                        args.down = false;
+                        configuration.config[Buttons.Back].Execute(args);
+                    }
+
+                    if (prevbuts.Start == ButtonState.Released && buts.Start == ButtonState.Pressed)
+                    {
+                        args.down = true;
+                        configuration.config[Buttons.Start].Execute(args);
+                    }
+                    else if (prevbuts.Start == ButtonState.Pressed && buts.Start == ButtonState.Released)
+                    {
+                        args.down = false;
+                        configuration.config[Buttons.Start].Execute(args);
+                    }
+
+                    if (prevbuts.LeftStick == ButtonState.Released && buts.LeftStick == ButtonState.Pressed)
+                    {
+                        args.down = true;
+                        configuration.config[Buttons.LeftStick].Execute(args);
+                    }
+                    else if (prevbuts.LeftStick == ButtonState.Pressed && buts.LeftStick == ButtonState.Released)
+                    {
+                        args.down = false;
+                        configuration.config[Buttons.LeftStick].Execute(args);
+                    }
+
+                    if (prevbuts.RightStick == ButtonState.Released && buts.RightStick == ButtonState.Pressed)
+                    {
+                        args.down = true;
+                        configuration.config[Buttons.RightStick].Execute(args);
+                    }
+                    else if (prevbuts.RightStick == ButtonState.Pressed && buts.RightStick == ButtonState.Released)
+                    {
+                        args.down = false;
+                        configuration.config[Buttons.RightStick].Execute(args);
+                    }
+
+                    if (prevbuts.LeftShoulder == ButtonState.Released && buts.LeftShoulder == ButtonState.Pressed)
+                    {
+                        args.down = true;
+                        configuration.config[Buttons.LeftShoulder].Execute(args);
+                    }
+                    else if (prevbuts.LeftShoulder == ButtonState.Pressed && buts.LeftShoulder == ButtonState.Released)
+                    {
+                        args.down = false;
+                        configuration.config[Buttons.LeftShoulder].Execute(args);
+                    }
+
+                    if (prevbuts.RightShoulder == ButtonState.Released && buts.RightShoulder == ButtonState.Pressed)
+                    {
+                        args.down = true;
+                        configuration.config[Buttons.RightShoulder].Execute(args);
+                    }
+                    else if (prevbuts.RightShoulder == ButtonState.Pressed && buts.RightShoulder == ButtonState.Released)
+                    {
+                        args.down = false;
+                        configuration.config[Buttons.RightShoulder].Execute(args);
                     }
                 }
-                if (curButtonState[(int)GamepadButtons.L3] && !previousButtonState[(int)GamepadButtons.L3] && curButtonState[(int)GamepadButtons.R3] || curButtonState[(int)GamepadButtons.R3] && !previousButtonState[(int)GamepadButtons.R3] && curButtonState[(int)GamepadButtons.L3])
-                {
-                    args.down = true;
-                    configuration.action[(int)GamepadButtons.L3_R3].Execute(args);
-                }
-
-                previousArrows = arrows;
-                previousButtonState = curButtonState;
-
-                Thread.Sleep(20);
             }
+
+            previousState = state;
         }
 
         public void ShowWindow()

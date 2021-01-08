@@ -37,7 +37,7 @@ namespace gamepad_mouse_controller
                 {
                     Show();
 
-                    Title = string.Format("Controller {0} Settings", gamepad.Index);
+                    Title = string.Format("Controller {0} Settings", gamepad.index);
                     mouseSesitivitySlider.Value = gamepad.mouseSensitivity;
                     scrollSesitivitySlider.Value = gamepad.scrollSensitivity;
                     Activate();
@@ -63,12 +63,12 @@ namespace gamepad_mouse_controller
 
         private void mouseSesitivitySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            gamepad.mouseSensitivity = (float)mouseSesitivitySlider.Value;
+            gamepad.mouseSensitivity = (int)mouseSesitivitySlider.Value;
         }
 
         private void scrollSesitivitySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            gamepad.scrollSensitivity = (float)scrollSesitivitySlider.Value;
+            gamepad.scrollSensitivity = (int)scrollSesitivitySlider.Value;
         }
 
         static void MainWindowPreviewKeyDown(object sender, KeyEventArgs e)

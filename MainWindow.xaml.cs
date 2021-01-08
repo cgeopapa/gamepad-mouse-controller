@@ -1,9 +1,9 @@
-﻿using gamepad_mouse_controller.Controller;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows;
 using MahApps.Metro.Controls;
 using gamepad_mouse_controller.Model;
 using System.Diagnostics;
+using gamepad_mouse;
 
 namespace gamepad_mouse_controller
 {
@@ -14,7 +14,7 @@ namespace gamepad_mouse_controller
         public MainWindow()
         {
             InitializeComponent();
-            gamepadList.ItemsSource = GamepadController.Gamepads;
+            gamepadList.ItemsSource = GamepadController.gamepads;
             Hide();
         }
 
